@@ -2,17 +2,21 @@ import uuid
 import time
 
 
-class Transaction():
+class Transaction:
 
     def __init__(self, sndrPubKey, rcvrPubKey, amount, txnType):
 
-        self.id = uuid.uuid1()
+        self.id = uuid.uuid1().hex
         self.txnType = txnType
         self.amount = amount
         self.timeStamp = time.time()
         self.sndrPubKey = sndrPubKey
         self.rcvrPubKey = rcvrPubKey
         self.signature = ''
+
+    def sign(self, signature):
+
+        self.signature = signature
 
     def toJson(self):
 
