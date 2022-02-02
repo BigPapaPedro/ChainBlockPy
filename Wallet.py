@@ -1,19 +1,49 @@
-import rsa
+from Crypto.PublicKey import RSA
+from Crypto.Signature import PKCS1_v1_5
 from BlockchainUtils import BlockchainUtils
-import pkcs
-
+from Transaction import Transaction
 
 class Wallet:
 
     def __init__(self):
 
-        (pubKey, privKey) = rsa.newkeys(1024)
+        # Generate public and private key pair.
+        self.keyPair = RSA.generate(2048)
+
+        # Extract the public and private keys.
+        self.pubKey = self.keyPair.public_key().export_key('PEM').decode('utf-8')
+        self.privKey = self.keyPair.export_key('PEM').decode('utf-8')
+
 
     def sign(self, data):
 
-        # TODO: https://servicenow.udemy.com/course/build-your-own-proof-of-stake-blockchain/learn/lecture/23314432#overview
-        # PKCS
-
         dataHash = BlockchainUtils.hash(data)
+        signatureSchemeObj = PKCS1_v1_5.new(self.keyPair)
+        signature = signatureSchemeObj.sign(dataHash)
 
-        return dataHash
+        return signature.hex()
+
+    @staticmethod
+    def signatureValid(data, signature, pubKeyString):
+
+        # Get the bytes from the signature.
+        signature = bytes.fromhex(signature)
+        dataHash = BlockchainUtils.hash(data)
+        pubKey = RSA.importKey(pubKeyString)
+        signatureSchemeObj = PKCS1_v1_5.new(pubKey)
+
+        return signatureSchemeObj.verify(dataHash, signature)
+
+    def pubKeyString(self):
+
+        pubKeyString = self.keyPair.public_key().export_key('PEM').decode('utf-8')
+
+        return pubKeyString
+
+    def createTransaction(self, rcvr, amount, txnType):
+
+        txn = Transaction(self.pubKeyString(), rcvr, amount, txnType)
+        signature = self.sign(txn.payload())
+        txn.sign(signature)
+
+        return txn

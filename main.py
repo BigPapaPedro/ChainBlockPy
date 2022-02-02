@@ -7,14 +7,20 @@ if __name__ == '__main__':
     sndr = 'sender'
     rcvr = 'receiver'
     amount = 1000000
-    txnType = 'transfer'
+    txnType = 'TRANSFER'
 
-    txn = Transaction(sndr, rcvr, amount, txnType)
-
-    #print(BlockchainUtils.hash(txnType))
+    # Create a wallet.
+    # This is how transactions are created.
     wallet = Wallet()
-    signature = wallet.sign(txn.toJson())
 
-    txn.sign(signature.hexdigest())
+    # Create a transaction.
+    txn = wallet.createTransaction(rcvr, amount, txnType)
 
+    # Generate the signature for the transaction.
+    signature = wallet.sign(txn.payload())
+
+    # Validate the signature.
+    signatureValid = Wallet.signatureValid(txn.payload(), txn.signature, wallet.pubKeyString())
+
+    #print(signatureValid)
     print(txn.toJson())

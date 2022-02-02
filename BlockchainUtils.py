@@ -1,5 +1,5 @@
+from Crypto.Hash import SHA256
 import json
-import hashlib
 
 
 class BlockchainUtils:
@@ -8,11 +8,6 @@ class BlockchainUtils:
     @staticmethod
     def hash(data: str):
 
-        # see if it can be done in one line.
-        # hashlib.sha256(str.encode())
-        # https://www.geeksforgeeks.org/sha-in-python/
-        # https://docs.python.org/3/library/hashlib.html
-
         # Convert data into string.
         dataString = json.dumps(data)
 
@@ -20,8 +15,6 @@ class BlockchainUtils:
         dataBytes = dataString.encode('utf-8')
 
         # Hash the bytes.
-        dataHash = hashlib.sha256(dataBytes)
+        dataHash = SHA256.new(dataBytes)
 
         return dataHash
-
-
