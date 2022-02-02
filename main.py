@@ -1,7 +1,12 @@
+from BlockChain import BlockChain
 from BlockchainUtils import BlockchainUtils
 from Transaction import Transaction
 from Wallet import Wallet
 from TransactionPool import TransactionPool
+from Block import Block
+
+import pprint
+
 
 if __name__ == '__main__':
 
@@ -24,10 +29,19 @@ if __name__ == '__main__':
     # Generate the signature for the transaction.
     signature = wallet.sign(txn.payload())
 
-    # Validate the signature.
-    signatureValid = Wallet.signatureValid(txn.payload(), txn.signature, wallet.pubKeyString())
+    blockChain = BlockChain()
 
-    #print(signatureValid)
-    print(txn.toJson())
+    prevHash = BlockchainUtils.hash(blockChain.blocks[-1].payload()).hexdigest()
+    blockCount = blockChain.blocks[-1].blkCount + 1
+    block = wallet.createBlock(txnPool.txnPool, 'prevHash', blockCount)
 
-    print(txnPool.txnPool)
+    if not blockChain.prevBlockHashValid(block):
+        print('Previous block hash is not valid.')
+
+    if not blockChain.blockCountValid(block):
+        print('Block count is not valid.')
+
+    if blockChain.prevBlockHashValid(block) and blockChain.blockCountValid(block):
+        blockChain.addBlock(block)
+
+    pprint.pprint(blockChain.toJson())
