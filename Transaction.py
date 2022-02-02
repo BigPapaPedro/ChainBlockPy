@@ -28,6 +28,13 @@ class Transaction:
 
         return jsonRepresentation
 
+    def equals(self, txn):
+
+        if self.id == txn.id:
+            return True
+        else:
+            return False
+
     # Return the dictionary in JSON format.
     def toJson(self):
 

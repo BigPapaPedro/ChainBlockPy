@@ -1,6 +1,7 @@
 from BlockchainUtils import BlockchainUtils
 from Transaction import Transaction
 from Wallet import Wallet
+from TransactionPool import TransactionPool
 
 if __name__ == '__main__':
 
@@ -12,9 +13,13 @@ if __name__ == '__main__':
     # Create a wallet.
     # This is how transactions are created.
     wallet = Wallet()
+    txnPool = TransactionPool()
 
     # Create a transaction.
     txn = wallet.createTransaction(rcvr, amount, txnType)
+
+    if txnPool.txnExists(txn) == False:
+        txnPool.addTxn(txn)
 
     # Generate the signature for the transaction.
     signature = wallet.sign(txn.payload())
@@ -24,3 +29,5 @@ if __name__ == '__main__':
 
     #print(signatureValid)
     print(txn.toJson())
+
+    print(txnPool.txnPool)
