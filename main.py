@@ -4,44 +4,46 @@ from Transaction import Transaction
 from Wallet import Wallet
 from TransactionPool import TransactionPool
 from Block import Block
-
+from AccountModel import AccountModel
 import pprint
 
 
 if __name__ == '__main__':
 
-    sndr = 'sender'
-    rcvr = 'receiver'
-    amount = 1000000
-    txnType = 'TRANSFER'
-
-    # Create a wallet.
-    # This is how transactions are created.
-    wallet = Wallet()
+    blockChain = BlockChain()
     txnPool = TransactionPool()
 
-    # Create a transaction.
-    txn = wallet.createTransaction(rcvr, amount, txnType)
+    # Wallets
+    exchange = Wallet()
+    alice = Wallet()
+    bob = Wallet()
+    forger = Wallet()
 
-    if txnPool.txnExists(txn) == False:
+    exchangeTxn = exchange.createTransaction(alice.pubKeyString(), 10, 'EXCHANGE')
+
+    if not txnPool.txnExists(exchangeTxn):
+        txnPool.addTxn(exchangeTxn)
+
+    coveredTxn = blockChain.getCoveredTxnSet(txnPool.txns)
+    prevHash = BlockchainUtils.hash(blockChain.blocks[-1].payload()).hexdigest()
+    blockCount = blockChain.blocks[-1].blockCount + 1
+    blockOne = forger.createBlock(coveredTxn, prevHash, blockCount)
+    blockChain.addBlock(blockOne)
+
+    txnPool.removeFromPool(blockOne.txns)
+
+    # alice send 25 tokens to bob
+    txn = alice.createTransaction(bob.pubKeyString(), 5, 'TRANSFER')
+
+    if not txnPool.txnExists(txn):
         txnPool.addTxn(txn)
 
-    # Generate the signature for the transaction.
-    #signature = wallet.sign(txn.payload())
-
-    blockChain = BlockChain()
-
+    coveredTxn = blockChain.getCoveredTxnSet(txnPool.txns)
     prevHash = BlockchainUtils.hash(blockChain.blocks[-1].payload()).hexdigest()
-    blockCount = blockChain.blocks[-1].blkCount + 1
-    block = wallet.createBlock(txnPool.txnPool, prevHash, blockCount)
+    blockCount = blockChain.blocks[-1].blockCount + 1
+    blockTwo = forger.createBlock(coveredTxn, prevHash, blockCount)
+    blockChain.addBlock(blockTwo)
 
-    if not blockChain.prevBlockHashValid(block):
-        print('Previous block hash is not valid.')
-
-    if not blockChain.blockCountValid(block):
-        print('Block count is not valid.')
-
-    if blockChain.prevBlockHashValid(block) and blockChain.blockCountValid(block):
-        blockChain.addBlock(block)
+    txnPool.removeFromPool(blockTwo.txns)
 
     pprint.pprint(blockChain.toJson())

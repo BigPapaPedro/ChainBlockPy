@@ -2,20 +2,38 @@ class TransactionPool:
 
     def __init__(self):
 
-        self.txnPool = []
+        self.txns = []
 
     # Add a transaction to the transaction pool.
     def addTxn(self, txn):
 
-        self.txnPool.append(txn)
+        self.txns.append(txn)
 
     # Verify the transaction does not already exist in the transaction pool.
     def txnExists(self, txn):
 
         # Iterate through the transaction ppl
-        for poolTxn in self.txnPool:
+        for poolTxn in self.txns:
 
             if poolTxn.equals(txn):
                 return True
 
         return False
+
+    # Clear the transaction pool.
+    def removeFromPool(self, txns):
+
+        newPoolTxns = []
+
+        for poolTxn in self.txns:
+            insert = True
+            for txn in txns:
+                if poolTxn.equals(txn):
+                    insert = False
+
+            if insert == True:
+                newPoolTxns.append(poolTxn)
+
+        self.txns = newPoolTxns
+
+

@@ -9,7 +9,7 @@ class Block:
         self.txns = txns
         self.prevHash = prevHash
         self.forger = forger
-        self.blkCount = blkCount
+        self.blockCount = blkCount
         self.timeStamp = time.time()
         self.signature = ''
 
@@ -41,7 +41,7 @@ class Block:
 
         data['prevHash'] = self.prevHash
         data['forger'] = self.forger
-        data['blkCount'] = self.blkCount
+        data['blockCount'] = self.blockCount
         data['timeStamp'] = self.timeStamp
         data['signature'] = self.signature
 
