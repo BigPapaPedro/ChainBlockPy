@@ -1,5 +1,4 @@
 import pprint
-
 from Block import Block
 from BlockchainUtils import BlockchainUtils
 
@@ -29,9 +28,6 @@ class BlockChain:
     def prevBlockHashValid(self, block):
 
         prevBlockchainBlockHash = BlockchainUtils.hash(self.blocks[-1].payload()).hexdigest()
-
-        pprint.pprint(prevBlockchainBlockHash)
-        print(block.prevHash)
 
         if prevBlockchainBlockHash == block.prevHash:
             return True

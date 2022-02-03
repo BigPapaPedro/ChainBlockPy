@@ -27,13 +27,13 @@ if __name__ == '__main__':
         txnPool.addTxn(txn)
 
     # Generate the signature for the transaction.
-    signature = wallet.sign(txn.payload())
+    #signature = wallet.sign(txn.payload())
 
     blockChain = BlockChain()
 
     prevHash = BlockchainUtils.hash(blockChain.blocks[-1].payload()).hexdigest()
     blockCount = blockChain.blocks[-1].blkCount + 1
-    block = wallet.createBlock(txnPool.txnPool, 'prevHash', blockCount)
+    block = wallet.createBlock(txnPool.txnPool, prevHash, blockCount)
 
     if not blockChain.prevBlockHashValid(block):
         print('Previous block hash is not valid.')

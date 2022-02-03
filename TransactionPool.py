@@ -1,5 +1,3 @@
-
-
 class TransactionPool:
 
     def __init__(self):
@@ -21,5 +19,3 @@ class TransactionPool:
                 return True
 
         return False
-
-
