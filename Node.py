@@ -6,6 +6,7 @@ from SocketCommunication import SocketCommunication
 
 class Node:
 
+    #
     def __init__(self, ip, port):
 
         # Initialize.

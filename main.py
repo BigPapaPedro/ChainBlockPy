@@ -18,7 +18,4 @@ if __name__ == '__main__':
     node = Node(ip, port)
     node.startP2p()
 
-    print(node.blockChain)
-    print(node.txnPool)
-    print(node.wallet)
 
