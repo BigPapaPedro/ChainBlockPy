@@ -40,6 +40,11 @@ class SocketCommunication(Node):
         self.peerDiscoveryHandler.handshake(node)
 
     #
+    def inbound_node_disconnected(self, node):
+
+        print('Node ' + str(node.port) + ' disconnected.')
+
+    #
     def node_message(self, node, msg):
 
         # Decode the incoming message.
