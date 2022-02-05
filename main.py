@@ -14,7 +14,7 @@ if __name__ == '__main__':
 
     print(sys.path)
 
-    #
+    # P2P
     ip = sys.argv[1]
     port = int(sys.argv[2])
 
@@ -23,5 +23,5 @@ if __name__ == '__main__':
 
     node = Node(ip, port)
     node.startP2p()
-    node.startAPI()
+    node.startAPI(apiPort)
 

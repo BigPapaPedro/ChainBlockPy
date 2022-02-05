@@ -25,6 +25,6 @@ class Node:
         self.p2p.startSocketCommunication()
 
     #
-    def starAPI(self):
+    def startAPI(self, apiPort):
         self.api = NodeAPI()
-        self.api.start()
+        self.api.start(apiPort)
