@@ -1,5 +1,3 @@
-
-
 class Message:
 
     def __init__(self, sndrConnector, msgType, data):

@@ -36,15 +36,18 @@ class PeerDiscoveryHandler:
 
         while True:
 
+            print('discovery')
             handshakeMsg = self.handshakeMsg()
             self.socketCommunication.broadcast(handshakeMsg)
             time.sleep(10)
 
     #
-    def handshake(self, node):
+    def handshake(self, connectedNode):
+
+        print('Handshake...')
 
         handshakeMsg = self.handshakeMsg()
-        self.socketCommunication.send(node, handshakeMsg)
+        self.socketCommunication.send(connectedNode, handshakeMsg)
 
     #
     def handshakeMsg(self):
@@ -72,7 +75,7 @@ class PeerDiscoveryHandler:
                 newPeer = False
 
         # if it's a new peer, add it to the peer list.
-        if newPeer == True:
+        if newPeer:
 
             self.socketCommunication.peers.append(peersSocketConnector)
 
