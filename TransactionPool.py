@@ -36,4 +36,11 @@ class TransactionPool:
 
         self.txns = newPoolTxns
 
+    # Determine if a new block needs to be forged.
+    def forgingRequired(self):
+
+        if len(self.txns) >= 1:
+            return True
+        else:
+            return False
 

@@ -13,10 +13,20 @@ class Wallet:
         self.keyPair = RSA.generate(2048)
 
         # Extract the public and private keys.
-        self.pubKey = self.keyPair.public_key().export_key('PEM').decode('utf-8')
-        self.privKey = self.keyPair.export_key('PEM').decode('utf-8')
+        #self.pubKey = self.keyPair.public_key().export_key('PEM').decode('utf-8')
+        #self.privKey = self.keyPair.export_key('PEM').decode('utf-8')
 
+    # Extract the key pair from file.
+    def fromKey(self, file):
 
+        key = ''
+
+        with open(file, 'r') as keyFile:
+            key = RSA.importKey(keyFile.read())
+
+        self.keyPair = key
+
+    #
     def sign(self, data):
 
         dataHash = BlockchainUtils.hash(data)
@@ -25,6 +35,7 @@ class Wallet:
 
         return signature.hex()
 
+    #
     @staticmethod
     def signatureValid(data, signature, pubKeyString):
 

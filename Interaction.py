@@ -11,9 +11,22 @@ if __name__ == '__main__':
 
     txn = exchange.createTransaction(alice.pubKeyString(), 10, 'EXCHANGE')
 
-    url = 'http://localhost:5002/txn'
+    url = 'http://localhost:5001/txn'
     pkg = {'txn': BlockchainUtils.encode(txn)}
 
     req = requests.post(url, json=pkg)
 
+    print('req.text')
     print(req.text)
+
+'''
+    txn = exchange.createTransaction(alice.pubKeyString(), 10, 'STAKE')
+
+    url = 'http://localhost:5001/txn'
+    pkg = {'txn': BlockchainUtils.encode(txn)}
+
+    req = requests.post(url, json=pkg)
+
+    print('req.text')
+    print(req.text)
+'''

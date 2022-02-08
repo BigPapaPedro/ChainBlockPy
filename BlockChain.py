@@ -2,6 +2,7 @@ import pprint
 from Block import Block
 from BlockchainUtils import BlockchainUtils
 from AccountModel import AccountModel
+from ProofOfStake import ProofOfStake
 
 class BlockChain:
 
@@ -12,6 +13,8 @@ class BlockChain:
 
         # Initialize the account model.
         self.acntModel = AccountModel()
+
+        self.pos = ProofOfStake()
 
     # Add a block to the chain.
     def addBlock(self, block):
@@ -74,12 +77,84 @@ class BlockChain:
     #
     def executeTxn(self, txn):
 
-        sndr = txn.sndrPubKey
-        rcvr = txn.rcvrPubKey
-        amount = txn.amount
+        print(txn.toJson())
 
-        self.acntModel.updateBalance(sndr, -amount)
-        self.acntModel.updateBalance(rcvr, amount)
+        if txn.txnType =='STAKE':
+
+            sndr = txn.sndrPubKey
+            rcvr = txn.rcvrPubKey
+
+            if sndr == rcvr:
+
+                amount = txn.amount
+                self.pos.update(sndr, amount)
+                self.acntModel.updateBalance(sndr, -amount)
+
+            else:
+
+                sndr = txn.sndrPubKey
+                rcvr = txn.rcvrPubKey
+                amount = txn.amount
+
+                self.acntModel.updateBalance(sndr, -amount)
+                self.acntModel.updateBalance(rcvr, amount)
+
+    #
+    def nextForger(self):
+
+        prevBlockHash = BlockchainUtils.hash(self.blocks[-1].payload()).hexdigest()
+
+        nextForger = self.pos.forger(prevBlockHash)
+
+        return nextForger
+
+    #
+    def createBlock(self, txnsFromPool, forgerWallet):
+
+        coveredTxns = self.getCoveredTxnSet(txnsFromPool)
+
+        self.executeTxns(coveredTxns)
+        newBlock = forgerWallet.createBlock(coveredTxns, BlockchainUtils.hash(
+            self.blocks[-1].payload()).hexdigest(), len(self.blocks))
+        self.blocks.append(newBlock)
+
+        return newBlock
+
+    # Determine if the transaction is already in the blockchain
+    # by searching the transaction in the blockchain.
+    # (I don't think this will scale well as the blockchain grows.)
+    def transactionExists(self, txn):
+
+        for block in self.blocks:
+
+            for blockTxn in block.txns:
+
+                if txn.equals(blockTxn):
+
+                    return True
+
+        return False
+
+    #
+    def forgeValid(self, block):
+
+        forgePubKey = self.pos.forger(block.prevHash)
+        proposedBlockForger = block.forger
+
+        if forgePubKey == proposedBlockForger:
+            return True
+        else:
+            return False
+
+    #
+    def txnValid(self, txns):
+
+        coveredTxns = self.getCoveredTxnSet(txns)
+
+        if len(coveredTxns) == len(txns):
+            return True
+
+        return False
 
     #
     def toJson(self):

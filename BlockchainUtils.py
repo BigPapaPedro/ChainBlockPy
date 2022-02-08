@@ -30,4 +30,3 @@ class BlockchainUtils:
     def decode(encodedObj):
 
         return jsonpickle.decode(encodedObj)
-    

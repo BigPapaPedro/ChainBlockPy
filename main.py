@@ -11,7 +11,13 @@ if __name__ == '__main__':
     # API port number
     apiPort = int(sys.argv[3])
 
-    node = Node(ip, port)
+    # File to private key to create node.
+    keyFile = None
+
+    if len(sys.argv) > 4:
+        keyFile = sys.argv[4]
+
+    node = Node(ip, port, keyFile)
     node.startP2P()
     node.startAPI(apiPort)
 

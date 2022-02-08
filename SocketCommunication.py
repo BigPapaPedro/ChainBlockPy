@@ -50,19 +50,33 @@ class SocketCommunication(Node):
 
         if msg.msgType == 'DISCOVERY':
 
-            self.peerDiscoveryHandler.handleMsg((msg))
+            self.peerDiscoveryHandler.handleMsg(msg)
 
-        elif msg.msgType== 'TRANSACTION':
+        elif msg.msgType == 'TRANSACTION':
 
             txn = msg.data
             self.node.handleTxn(txn)
 
-    #
+        elif msg.msgType == 'BLOCK':
+
+            block = msg.data
+            self.node.handleBlock(block)
+
+        elif msg.msgType == 'BLOCKCHAINREQ':
+
+            self.node.handleBlockchainReq(node)
+
+        elif msg.msgType == 'BLOCKCHAIN':
+
+            blockchain = msg.data
+            self.node.handleBlock(blockchain)
+
+    # Send a message to a single node.
     def send(self, rcvr, msg):
 
         self.send_to_node(rcvr, msg)
 
-    #
+    # Broadcast a message to all nodes.
     def broadcast(self, msg):
 
         self.send_to_nodes(msg)
