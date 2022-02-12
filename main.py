@@ -4,20 +4,23 @@ import sys
 
 if __name__ == '__main__':
 
-    # P2P
+    # IP or URL
     ip = sys.argv[1]
-    port = int(sys.argv[2])
+
+    # P2P
+    p2pPort = int(sys.argv[2])
 
     # API port number
     apiPort = int(sys.argv[3])
 
-    # File to private key to create node.
+    # File with private key to create node.
     keyFile = None
 
+    # Since the keyfile is optional, check if one was given.
     if len(sys.argv) > 4:
         keyFile = sys.argv[4]
 
-    node = Node(ip, port, keyFile)
+    # Create an instance of the node and start the services.
+    node = Node(ip, p2pPort,apiPort, keyFile)
     node.startP2P()
-    node.startAPI(apiPort)
-
+    node.startAPI()

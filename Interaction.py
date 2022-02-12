@@ -9,24 +9,39 @@ if __name__ == '__main__':
     alice = Wallet()
     exchange = Wallet()
 
-    txn = exchange.createTransaction(alice.pubKeyString(), 10, 'EXCHANGE')
+    txn = exchange.createTransaction(alice.pubKeyString(), 1000, 'STAKE')
 
-    url = 'http://localhost:5001/txn'
+    url = 'http://pedroruiz.sytes.net:8021/txn'
     pkg = {'txn': BlockchainUtils.encode(txn)}
 
     req = requests.post(url, json=pkg)
 
-    print('req.text')
     print(req.text)
 
-'''
-    txn = exchange.createTransaction(alice.pubKeyString(), 10, 'STAKE')
+    txn = exchange.createTransaction(bob.pubKeyString(), 100, 'EXCHANGE')
 
-    url = 'http://localhost:5001/txn'
+    url = 'http://pedroruiz.sytes.net:8021/txn'
     pkg = {'txn': BlockchainUtils.encode(txn)}
 
     req = requests.post(url, json=pkg)
 
-    print('req.text')
     print(req.text)
-'''
+
+    txn = exchange.createTransaction(exchange.pubKeyString(), 1000, 'EXCHANGE')
+
+    url = 'http://pedroruiz.sytes.net:8021/txn'
+    pkg = {'txn': BlockchainUtils.encode(txn)}
+
+    req = requests.post(url, json=pkg)
+
+    print(req.text)
+    txn = exchange.createTransaction(exchange.pubKeyString(), 10000, 'EXCHANGE')
+
+    url = 'http://pedroruiz.sytes.net:8021/txn'
+    pkg = {'txn': BlockchainUtils.encode(txn)}
+
+    req = requests.post(url, json=pkg)
+
+    print(req.text)
+
+

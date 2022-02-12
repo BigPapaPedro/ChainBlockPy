@@ -23,13 +23,13 @@ class SocketCommunication(Node):
         self.node = node
         self.start()
         self.peerDiscoveryHandler.start()
-        self.connectToGenesisNode()
+        self.connectToGenesisNode(node.ip)
 
     #
-    def connectToGenesisNode(self):
+    def connectToGenesisNode(self, ip):
 
-        if self.socketConnector.port != 8081:
-            self.connect_with_node('localhost', 8081)
+        if self.socketConnector.port != 5021:
+            self.connect_with_node(ip, 5021)
 
     #
     def inbound_node_connected(self, connectedNode):

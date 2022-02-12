@@ -13,10 +13,11 @@ class Block:
         self.timeStamp = time.time()
         self.signature = ''
 
+    # The very first block in the chain.
     @staticmethod
     def genesis():
 
-        genesisBlock = Block([], 'genesisHash', 'genesis', 0)
+        genesisBlock = Block([], 'Genesis Hash', 'Genesis Public Key', 0)
         genesisBlock.timeStamp = 0
 
         return genesisBlock

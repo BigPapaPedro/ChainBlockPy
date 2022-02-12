@@ -1,5 +1,5 @@
 import requests
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template
 from flask_classful import FlaskView, route
 from BlockchainUtils import BlockchainUtils
 
@@ -14,10 +14,10 @@ class NodeAPI(FlaskView):
         self.app = Flask(__name__)
 
     #
-    def start(self, apiPort):
+    def start(self, ip, apiPort):
 
         NodeAPI.register(self.app, route_base='/')
-        self.app.run(host='localhost', port=apiPort)
+        self.app.run(host=ip, port=apiPort)
 
     #
     def injectNode(self, injectedNode):
@@ -26,13 +26,13 @@ class NodeAPI(FlaskView):
         node = injectedNode
 
     #
-    @route('/info', methods=['GET'])
+    @route('info', methods=['GET'])
     def info(self):
 
-        return 'This is a communication interface to a nodes blockchain', 200
+        return '<!DOCTYPE html><html lang="en"><head><title>ChainBlockPy</title></head><body>ChainBlockPy</body></html>', 200
 
     #
-    @route('/blockchain', methods=['GET'])
+    @route('blockchain', methods=['GET'])
     def blockchain(self):
 
         return node.blockChain.toJson(), 200
@@ -68,4 +68,21 @@ class NodeAPI(FlaskView):
         response = {'msg': 'Received transaction'}
 
         return jsonify(response), 201
-    
+
+    #
+    @route('/', methods=['GET'])
+    def info(self):
+
+        return render_template('info.html')
+
+    #
+    @route('blockchainexplorer', methods=['GET'])
+    def blockchainExplorer(self):
+
+        return render_template('blockchainexplorer.html')
+
+    #
+    @route('transactionexplorer', methods=['GET'])
+    def txnsExplorer(self):
+
+        return render_template('transactionsexplorer.html')

@@ -12,11 +12,12 @@ from NodeAPI import NodeAPI
 class Node:
 
     #
-    def __init__(self, ip, port, key=None):
+    def __init__(self, ip, p2pPort, apiPort, key=None):
 
         # Initialize.
         self.ip = ip
-        self.port = port
+        self.p2pPort = p2pPort
+        self.apiPort = apiPort
         self.p2p = None
         self.txnPool = TransactionPool()
         self.wallet = Wallet()
@@ -30,15 +31,15 @@ class Node:
     #
     def startP2P(self):
 
-        self.p2p = SocketCommunication(self.ip, self.port)
+        self.p2p = SocketCommunication(self.ip, self.p2pPort)
         self.p2p.startSocketCommunication(self)
 
     #
-    def startAPI(self, apiPort):
+    def startAPI(self):
 
         self.api = NodeAPI()
         self.api.injectNode(self)
-        self.api.start(apiPort)
+        self.api.start(self.ip, self.apiPort)
 
     #
     def handleTxn(self, txn):
