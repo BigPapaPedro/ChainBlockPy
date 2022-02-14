@@ -17,7 +17,7 @@ class NodeAPI(FlaskView):
     def start(self, ip, apiPort):
 
         NodeAPI.register(self.app, route_base='/')
-        self.app.run(host=ip, port=apiPort)
+        self.app.run(host=ip, port=apiPort, use_reloader=True)
 
     #
     def injectNode(self, injectedNode):
@@ -26,10 +26,16 @@ class NodeAPI(FlaskView):
         node = injectedNode
 
     #
+    @route('/', methods=['GET'])
+    def indexPage(self):
+
+        return render_template('index.html')
+
+    #
     @route('info', methods=['GET'])
     def info(self):
 
-        return '<!DOCTYPE html><html lang="en"><head><title>ChainBlockPy</title></head><body>ChainBlockPy</body></html>', 200
+        return '<!DOCTYPE html><html lang="en"><head><title>ChainBlockPy 0.01</title></head><body>ChainBlockPy 0.01</body></html>', 200
 
     #
     @route('blockchain', methods=['GET'])
@@ -70,10 +76,10 @@ class NodeAPI(FlaskView):
         return jsonify(response), 201
 
     #
-    @route('/', methods=['GET'])
-    def info(self):
+    @route('about', methods=['GET'])
+    def about(self):
 
-        return render_template('info.html')
+        return render_template('about.html')
 
     #
     @route('blockchainexplorer', methods=['GET'])
