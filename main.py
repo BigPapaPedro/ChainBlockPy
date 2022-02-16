@@ -1,8 +1,11 @@
 from Node import Node
+from DBDriver import DBDriver
 import sys
 
 
 if __name__ == '__main__':
+
+    dbName = "sample.db"
 
     # IP or URL
     ip = sys.argv[1]
@@ -20,7 +23,11 @@ if __name__ == '__main__':
     if len(sys.argv) > 4:
         keyFile = sys.argv[4]
 
+    # Create and connect to the database.
+    db = DBDriver(dbName)
+
     # Create an instance of the node and start the services.
-    node = Node(ip, p2pPort,apiPort, keyFile)
+    node = Node(ip, p2pPort, apiPort, dbName, keyFile)
+    node.startDB()
     node.startP2P()
     node.startAPI()

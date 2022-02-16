@@ -7,26 +7,35 @@ from Wallet import Wallet
 from BlockChain import BlockChain
 from SocketCommunication import SocketCommunication
 from NodeAPI import NodeAPI
+from DBDriver import DBDriver
 
 
 class Node:
 
     #
-    def __init__(self, ip, p2pPort, apiPort, key=None):
+    def __init__(self, ip, p2pPort, apiPort, dbName, key=None):
 
         # Initialize.
         self.ip = ip
         self.p2pPort = p2pPort
         self.apiPort = apiPort
-        self.p2p = None
+        self.dbName = dbName
         self.txnPool = TransactionPool()
         self.wallet = Wallet()
         self.blockChain = BlockChain()
+        self.p2p = None
         self.api = None
+        self.db = None
 
         # Create a wallet using the provided key from file.
         if key is not None:
             self.wallet.fromKey(key)
+
+    #
+    def startDB(self):
+
+        self.db = DBDriver(self.dbName)
+        self.db.createDB()
 
     #
     def startP2P(self):
@@ -130,13 +139,17 @@ class Node:
             # Create the block.
             block = self.blockChain.createBlock(self.txnPool.txns, self.wallet)
 
-            # Remove the transactions from the pool.
-            self.txnPool.removeFromPool(block.txns)
-
             # Broadcast the block to the nodes.
             msg = Message(self.p2p.socketConnector, 'BLOCK', block)
             encodedMsg = BlockchainUtils.encode(msg)
             self.p2p.broadcast(encodedMsg)
+
+            # Save the block to the database.
+            print("insert block into chain")
+            self.db.insertBlock(block)
+
+            # Remove the transactions from the pool.
+            self.txnPool.removeFromPool(block.txns)
 
         else:
             print('Im not the next forger')

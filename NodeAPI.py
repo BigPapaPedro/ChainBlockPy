@@ -2,6 +2,7 @@ import requests
 from flask import Flask, jsonify, request, render_template
 from flask_classful import FlaskView, route
 from BlockchainUtils import BlockchainUtils
+from SocketCommunication import SocketCommunication
 
 node = None
 
@@ -29,7 +30,7 @@ class NodeAPI(FlaskView):
     @route('/', methods=['GET'])
     def indexPage(self):
 
-        return render_template('index.html')
+        return render_template('home.html')
 
     #
     @route('info', methods=['GET'])
@@ -91,4 +92,10 @@ class NodeAPI(FlaskView):
     @route('transactionexplorer', methods=['GET'])
     def txnsExplorer(self):
 
-        return render_template('transactionsexplorer.html')
+        return render_template('transactionexplorer.html')
+
+    #
+    @route('nodeexplorer', methods=['GET'])
+    def nodeExplorer(self):
+
+        return render_template('nodeexplorer.html')

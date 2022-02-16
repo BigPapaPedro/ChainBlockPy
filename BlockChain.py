@@ -77,8 +77,6 @@ class BlockChain:
     #
     def executeTxn(self, txn):
 
-        print(txn.toJson())
-
         if txn.txnType =='STAKE':
 
             sndr = txn.sndrPubKey

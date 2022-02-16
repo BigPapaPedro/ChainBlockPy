@@ -1,37 +1,22 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>Transaction Pool Explorer</title>
+    <meta charset="UTF-8">
+    <title>ChainBlockPy Transaction Explorer</title>
+    <link rel="icon" href="/static/images/favicon.ico">
+    <link rel="stylesheet" href="/static/css/default.css">
+    <link rel="stylesheet" href="/static/css/navbar.css">
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.0.min.js"></script>
 </head>
-
-<style>
-body {
-    background-color: white;
-    font-family: Arial, Helvetica, sans-serif;
-}
-
-table {
-    width: 100%
-    border-collapse: collapse;
-}
-
-th {
-    background-color: gray;
-    color: white;
-}
-
-th, td {
-    text-align: center;
-    padding: 15px;
-    border-bottom: 1px solid gray;
-}
-
-tr:nth-child(even) {
-    background-color: lightgray;
-}
-</style>
-
 <body>
+
+    <ul class="navbar">
+      <li class="navbar"><a class="navbar" href="/">Home</a></li>
+      <li class="navbar"><a class="navbar" href="blockchainexplorer">Blockchain Explorer</a></li>
+      <li class="navbar"><a class="navbar active" href="transactionexplorer">Transaction Explorer</a></li>
+      <li class="navbar"><a class="navbar" href="nodeexplorer">Node Explorer</a></li>
+      <li class="navbar" style="float:right"><a class="navbar" class="active" href="#about">About</a></li>
+    </ul>
 
     <h2>Transactions Explorer</h2>
 
@@ -46,6 +31,7 @@ tr:nth-child(even) {
             <th>Timestamp</th>
             <th>Transaction Type</th>
         </tr>
+
         <script>
 
         $.getJSON('/txnpool', function(data) {
