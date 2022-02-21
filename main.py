@@ -1,5 +1,4 @@
 from Node import Node
-from DBDriver import DBDriver
 import sys
 
 
@@ -22,9 +21,6 @@ if __name__ == '__main__':
     # Since the keyfile is optional, check if one was given.
     if len(sys.argv) > 4:
         keyFile = sys.argv[4]
-
-    # Create and connect to the database.
-    db = DBDriver(dbName)
 
     # Create an instance of the node and start the services.
     node = Node(ip, p2pPort, apiPort, dbName, keyFile)

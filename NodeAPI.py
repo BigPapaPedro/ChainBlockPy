@@ -57,10 +57,26 @@ class NodeAPI(FlaskView):
         return jsonify(txns), 200
 
     #
+    @route('maketxn', methods=['GET'])
+    def makeTxn(self):
+
+        return render_template('maketxn.html')
+
+        #
+
+    @route('test', methods=['POST'])
+    def test(self):
+        print("@route test: " + str(request.data))
+        response = str(request.data)
+        return jsonify(response), 201
+
+    #
     @route('txn', methods=['POST'])
     def txn(self):
 
+        print("@route request: " + str(request.data))
         values = request.get_json()
+        print("@route values: " + str(values))
 
         # Verify the received string contains json values.
         if not 'txn' in values:
@@ -68,6 +84,8 @@ class NodeAPI(FlaskView):
 
         # Decode the received json string into an object.
         txn = BlockchainUtils.decode(values['txn'])
+
+        print("decode: " + txn.signature)
 
         # Handle the transaction.
         node.handleTxn(txn)

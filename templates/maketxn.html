@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Make Transaction: Send</title>
+    <link rel="icon" href="/static/images/favicon.ico">
+    <link rel="stylesheet" href="/static/css/default.css">
+    <link rel="stylesheet" href="/static/css/navbar.css">
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.0.min.js"></script>
+</head>
+<body>
+
+    <ul class="navbar">
+      <li class="navbar"><a class="navbar" href="/">Home</a></li>
+      <li class="navbar"><a class="navbar active" href="maketxn">Make Transaction</a></li>
+      <li class="navbar"><a class="navbar" href="blockchainexplorer">Blockchain Explorer</a></li>
+      <li class="navbar"><a class="navbar" href="transactionexplorer">Transaction Explorer</a></li>
+      <li class="navbar"><a class="navbar" href="nodeexplorer">Node Explorer</a></li>
+      <li class="navbar" style="float:right"><a class="navbar" class="active" href="#about">About</a></li>
+    </ul>
+
+    <h2>Make Transaction: Send</h2>
+
+    <form id="sendForm">
+        Sender Public Key <input type="text" id="sndrPubKey" placeholder="Sender Public Key"><br>
+        Recipient Public Key <input type="text" id="rcvrPubKey" placeholder="Receiver Public Key"><br>
+        Amount <input type="text" id="amount" placeholder="0"><br>
+        <input type="hidden" id="txnType" value="EXCHANGE">
+        <input id="submitButton" type="button" onclick="onSubmitButton()" value="Send"><br>
+    </form>
+
+    <div id="response">
+        <pre></pre>
+    </div>
+
+    <script>
+
+    function onSubmitButton() {
+
+        var sndrPubKey = $("#sndrPubKey").val();
+        var rcvrPubKey = $("#rcvrPubKey").val();
+        var amount = $("#amount").val();
+        var txnType = $("#txnType").val();
+
+        var dataJsonObj = {'txn': {"py/object": "Transaction.Transaction", "id": "000", "txnType": txnType, "amount": amount, "timeStamp": 1645378366.3736532, "sndrPubKey": sndrPubKey, "rcvrPubKey": rcvrPubKey, "signature": "26eb4f081a0708a4c4b021929bb4f71e5dbe8621370c7e87233a803523fa6c763d9fc3fb5977757aee755cc0dba18e97b4841d07617ed49118dbc04ccf305972dd4d84983d34343b62384b48134837577b8c3e2999762536f9a45184340c9704ae2465f7b6c0db44ebbb8ab9bc5cc5e929f5ba95cad357101383a38bfd5db39cbe9efc5545dd297ad96d6a042ba5ed3a999a30d8c5b0410a9de0ca4c6932743597aa6c67db53a32dcf2ce37b4dc5a2a6f906846165173f8ae33a36f626fa4a58ffb246a23f95c3624bbac77b30246383b6f9287088799bc3784ca072668d13d2b6a73a4016c675a304d51cd05c0d68fe7fb6e062361a2900bbea956591c9460b"}};
+
+        var dataJsonStr = JSON.stringify(dataJsonObj);
+
+
+        console.log(dataJsonObj);
+
+        $.ajax({
+            method: "POST",
+            url: "http://192.168.1.113:8021/txn",
+            data: dataJsonStr,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function( resp ){
+                    $('#response pre').html( resp );
+                },
+                error: function( jqXhr, textStatus, errorThrown ){
+                    console.log( errorThrown );
+            }
+        });
+    }
+    </script>
+</body>
+</html>

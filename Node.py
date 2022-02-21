@@ -53,6 +53,7 @@ class Node:
     #
     def handleTxn(self, txn):
 
+        print('!!!!! txn: ' + str(txn))
         data = txn.payload()
         signature = txn.signature
         signerPubKey = txn.sndrPubKey
