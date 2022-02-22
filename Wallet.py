@@ -7,6 +7,7 @@ from Block import Block
 
 class Wallet:
 
+    #
     def __init__(self):
 
         # Generate public and private key pair.
@@ -47,12 +48,14 @@ class Wallet:
 
         return signatureSchemeObj.verify(dataHash, signature)
 
+    #
     def pubKeyString(self):
 
         pubKeyString = self.keyPair.public_key().export_key('PEM').decode('utf-8')
 
         return pubKeyString
 
+    #
     def createTransaction(self, rcvr, amount, txnType):
 
         txn = Transaction(self.pubKeyString(), rcvr, amount, txnType)
@@ -61,6 +64,7 @@ class Wallet:
 
         return txn
 
+    #
     def createBlock(self, txns, prevHash, blkCount):
 
         block = Block(txns, prevHash, self.pubKeyString(), blkCount)

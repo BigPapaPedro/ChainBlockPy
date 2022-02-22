@@ -7,42 +7,53 @@ from Wallet import Wallet
 from BlockChain import BlockChain
 from SocketCommunication import SocketCommunication
 from NodeAPI import NodeAPI
+from DBDriver import DBDriver
 
 
 class Node:
 
     #
-    def __init__(self, ip, port, key=None):
+    def __init__(self, ip, p2pPort, apiPort, dbName, key=None):
 
         # Initialize.
         self.ip = ip
-        self.port = port
-        self.p2p = None
+        self.p2pPort = p2pPort
+        self.apiPort = apiPort
+        self.dbName = dbName
         self.txnPool = TransactionPool()
         self.wallet = Wallet()
         self.blockChain = BlockChain()
+        self.p2p = None
         self.api = None
+        self.db = None
 
         # Create a wallet using the provided key from file.
         if key is not None:
             self.wallet.fromKey(key)
 
     #
+    def startDB(self):
+
+        self.db = DBDriver(self.dbName)
+        self.db.createDB()
+
+    #
     def startP2P(self):
 
-        self.p2p = SocketCommunication(self.ip, self.port)
+        self.p2p = SocketCommunication(self.ip, self.p2pPort)
         self.p2p.startSocketCommunication(self)
 
     #
-    def startAPI(self, apiPort):
+    def startAPI(self):
 
         self.api = NodeAPI()
         self.api.injectNode(self)
-        self.api.start(apiPort)
+        self.api.start(self.ip, self.apiPort)
 
     #
     def handleTxn(self, txn):
 
+        print('!!!!! txn: ' + str(txn))
         data = txn.payload()
         signature = txn.signature
         signerPubKey = txn.sndrPubKey
@@ -129,13 +140,17 @@ class Node:
             # Create the block.
             block = self.blockChain.createBlock(self.txnPool.txns, self.wallet)
 
-            # Remove the transactions from the pool.
-            self.txnPool.removeFromPool(block.txns)
-
             # Broadcast the block to the nodes.
             msg = Message(self.p2p.socketConnector, 'BLOCK', block)
             encodedMsg = BlockchainUtils.encode(msg)
             self.p2p.broadcast(encodedMsg)
+
+            # Save the block to the database.
+            print("insert block into chain")
+            self.db.insertBlock(block)
+
+            # Remove the transactions from the pool.
+            self.txnPool.removeFromPool(block.txns)
 
         else:
             print('Im not the next forger')
