@@ -62,14 +62,6 @@ class NodeAPI(FlaskView):
 
         return render_template('maketxn.html')
 
-        #
-
-    @route('test', methods=['POST'])
-    def test(self):
-        print("@route test: " + str(request.data))
-        response = str(request.data)
-        return jsonify(response), 201
-
     #
     @route('newtxn', methods=['POST'])
     def newtxn(self):
@@ -110,32 +102,37 @@ class NodeAPI(FlaskView):
     @route('txn', methods=['POST'])
     def txn(self):
 
-        print("@route request: " + str(request.data))
+        print("---> NodeAPI.txn: " + str(request.data))
         values = request.get_json()
-        print("@route values: " + str(values))
+        responseBody = None
+        responseCode = 400
 
         # Verify the received string contains json values.
         if not 'txn' in values:
-            return 'Missing transaction values.', 400
 
-        # Decode the received json string into an object.
-        txn = BlockchainUtils.decode(values['txn'])
+            responseBody = {'msg': 'Missing transaction values'}
+            #return 'Missing transaction values.', 400
 
-        print("decode: id " + txn.id)
-        print("decode: txnType " + txn.txnType)
-        print("decode: signature " + txn.signature)
-        print("decode: amount " + str(txn.amount))
-        print("decode: sndrPubKey " + txn.sndrPubKey)
-        print("decode: rcvrPubKey " + txn.rcvrPubKey)
-        print("decode: timeStamp " + str(txn.timeStamp))
+        else:
 
-        # Handle the transaction.
-        print("handleTxn")
-        node.handleTxn(txn)
+            # Decode the received json string into an object.
+            txn = BlockchainUtils.decode(values['txn'])
 
-        response = {'msg': 'Received transaction'}
+            print("decode: id " + txn.id)
+            print("decode: txnType " + txn.txnType)
+            print("decode: signature " + txn.signature)
+            print("decode: amount " + str(txn.amount))
+            print("decode: sndrPubKey " + txn.sndrPubKey)
+            print("decode: rcvrPubKey " + txn.rcvrPubKey)
+            print("decode: timeStamp " + str(txn.timeStamp))
 
-        return jsonify(response), 201
+            # Handle the transaction.
+            node.handleTxn(txn)
+
+            responseBody = {'msg': 'Transaction ' + txn.id + ' Received'}
+            responseCode = 200
+
+        return jsonify(responseBody), responseCode
 
     #
     @route('about', methods=['GET'])
@@ -160,3 +157,9 @@ class NodeAPI(FlaskView):
     def networkExplorer(self):
 
         return render_template('networkexplorer.html')
+
+    #
+    @route('echotest', methods=['POST'])
+    def echoTest(self):
+        print("@route echoTest: " + str(request.data))
+        return request.data, 201

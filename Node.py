@@ -34,18 +34,21 @@ class Node:
     #
     def startDB(self):
 
+        print('---> Node.startDB')
         self.db = DBDriver(self.dbName)
         self.db.createDB()
 
     #
     def startP2P(self):
 
+        print('---> Node.startP2P')
         self.p2p = SocketCommunication(self.ip, self.p2pPort)
         self.p2p.startSocketCommunication(self)
 
     #
     def startAPI(self):
 
+        print('---> Node.startAPI')
         self.api = NodeAPI()
         self.api.injectNode(self)
         self.api.start(self.ip, self.apiPort)
@@ -53,7 +56,7 @@ class Node:
     #
     def handleTxn(self, txn):
 
-        print('!!! handleTxn: ' + str(txn))
+        print('---> Node.handleTxn:', str(txn))
         data = txn.payload()
         signature = txn.signature
         signerPubKey = txn.sndrPubKey
@@ -61,10 +64,9 @@ class Node:
         txnExists = self.txnPool.txnExists(txn)
         txnInBlock = self.blockChain.transactionExists((txn))
 
-        print('!!! txnExists: ' + str(txnExists) + ', txnInBlock:' + str(txnInBlock) + ', signatureValid: ' + str(signatureValid))
+        print('---> Node.handleTxn: txnExists: ' + str(txnExists) + ', txnInBlock: ' + str(txnInBlock) + ', signatureValid: ' + str(signatureValid))
 
         if not txnExists and not txnInBlock and signatureValid:
-            print('!!! handleTxn IF:')
             self.txnPool.addTxn(txn)
             msg = Message(self.p2p.socketConnector, 'TRANSACTION', txn)
             encodedMessage = BlockchainUtils.encode(msg)
@@ -80,6 +82,7 @@ class Node:
     #
     def handleBlock(self, block):
 
+        print('---> Node.handleBlock:', str(block))
         forger = block.forger
         blockHash = block.payload()
         signature = block.signature
@@ -103,6 +106,7 @@ class Node:
     # Request the entire chain.
     def requestChain(self):
 
+        print('---> Node.requestChain: ' + str(txn))
         msg = Message(self.p2p.socketConnector, "BLOCKCHAINREQ", None)
         encodedMsg = BlockchainUtils.encode(msg)
         self.p2p.broadcast(encodedMsg)
@@ -110,6 +114,7 @@ class Node:
     #
     def handleBlockchainReq(self, requestingNode):
 
+        print('---> Node.handleBLockchainReq: ' + str(requestingNode))
         msg = Message(self.p2p.socketConnector, 'BLOCKCHAIN', self.blockChain)
         encodedMsg = BlockchainUtils.encode(msg)
         self.p2p.send(requestingNode, encodedMsg)
@@ -117,6 +122,7 @@ class Node:
     #
     def handleBLockchain(self, blockchain):
 
+        print('---> Node.handleBLockchain: ' + str(blockchain))
         localBlockchainCopy = copy.deepcopy(self.blockChain)
         localBlockCount = len(localBlockchainCopy.blocks)
         receivedChainBlockCount = len(blockchain.blocks)
@@ -135,10 +141,11 @@ class Node:
     #
     def forge(self):
 
+        print('---> Node.forge:')
         forger = self.blockChain.nextForger()
 
         if forger == self.wallet.pubKeyString():
-            print('Im the next forger')
+            print('---> Node.forge: Im the next forger')
 
             # Create the block.
             block = self.blockChain.createBlock(self.txnPool.txns, self.wallet)
@@ -149,11 +156,11 @@ class Node:
             self.p2p.broadcast(encodedMsg)
 
             # Save the block to the database.
-            print("insert block into chain")
             self.db.insertBlock(block)
 
             # Remove the transactions from the pool.
             self.txnPool.removeFromPool(block.txns)
 
         else:
-            print('Im not the next forger')
+
+            print('---> Node.forge: Im not the next forger')

@@ -20,6 +20,7 @@ class Wallet:
     # Extract the key pair from file.
     def fromKey(self, file):
 
+        print('---> Wallet.fromKey: ', str(file))
         key = ''
 
         with open(file, 'r') as keyFile:
@@ -30,6 +31,7 @@ class Wallet:
     #
     def sign(self, data):
 
+        print('---> Wallet.sign: ', str(data))
         dataHash = BlockchainUtils.hash(data)
         signatureSchemeObj = PKCS1_v1_5.new(self.keyPair)
         signature = signatureSchemeObj.sign(dataHash)
@@ -40,10 +42,11 @@ class Wallet:
     @staticmethod
     def signatureValid(data, signature, pubKeyString):
 
+        print('---> Wallet.signatureValid:')
         # Get the bytes from the signature.
         signature = bytes.fromhex(signature)
         dataHash = BlockchainUtils.hash(data)
-        print("RSA.importKey(pubKeyString)", RSA.importKey(pubKeyString).public_key().export_key())
+        print("---> Wallet.signatureValid: RSA.importKey(pubKeyString)", RSA.importKey(pubKeyString).public_key().export_key())
         pubKey = RSA.importKey(pubKeyString)
         signatureSchemeObj = PKCS1_v1_5.new(pubKey)
 
@@ -52,6 +55,7 @@ class Wallet:
     #
     def pubKeyString(self):
 
+        print('---> Wallet.pubKeyString:')
         pubKeyString = self.keyPair.public_key().export_key('PEM').decode('utf-8')
 
         return pubKeyString
@@ -59,6 +63,7 @@ class Wallet:
     #
     def createTransaction(self, rcvr, amount, txnType):
 
+        print('---> Wallet.createTransaction:')
         txn = Transaction(self.pubKeyString(), rcvr, amount, txnType)
         signature = self.sign(txn.payload())
         txn.sign(signature)
@@ -68,6 +73,7 @@ class Wallet:
     #
     def createBlock(self, txns, prevHash, blkCount):
 
+        print('---> Wallet.createBlock:')
         block = Block(txns, prevHash, self.pubKeyString(), blkCount)
         signature = self.sign(block.payload())
         block.sign(signature)

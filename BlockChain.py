@@ -19,11 +19,15 @@ class BlockChain:
     # Add a block to the chain.
     def addBlock(self, block):
 
+        print('---> BlockChain.addBlock:')
+
         self.executeTxns(block.txns)
         self.blocks.append(block)
 
     # Validate block count.
     def blockCountValid(self, block):
+
+        print('---> BlockChain.blockCountValid:')
 
         # If the previous block count in the chain matches the current block count -1,
         # then it's a valid block.
@@ -35,6 +39,7 @@ class BlockChain:
     #
     def prevBlockHashValid(self, block):
 
+        print('---> BlockChain.prevBLockHashValid:')
         prevBlockchainBlockHash = BlockchainUtils.hash(self.blocks[-1].payload()).hexdigest()
 
         if prevBlockchainBlockHash == block.prevHash:
@@ -44,6 +49,8 @@ class BlockChain:
 
     #
     def getCoveredTxnSet(self, txns):
+
+        print('---> BlockChain.getCoveredTxnSet:')
 
         coveredTransactions = []
 
@@ -58,6 +65,8 @@ class BlockChain:
     # See if the sender has sufficient tokens to cover the transaction amount.
     def txnCovered(self, txn):
 
+        print('---> BlockChain.txnCovered:')
+
         if txn.txnType == 'EXCHANGE':
             return True
 
@@ -71,11 +80,15 @@ class BlockChain:
     #
     def executeTxns(self, txns):
 
+        print('---> BlockChain.executeTxns:')
+
         for txn in txns:
             self.executeTxn(txn)
 
     #
     def executeTxn(self, txn):
+
+        print('---> BlockChain.executeTxn:')
 
         if txn.txnType =='STAKE':
 
@@ -100,6 +113,8 @@ class BlockChain:
     #
     def nextForger(self):
 
+        print('---> BlockChain.nextForger:')
+
         prevBlockHash = BlockchainUtils.hash(self.blocks[-1].payload()).hexdigest()
 
         nextForger = self.pos.forger(prevBlockHash)
@@ -108,6 +123,8 @@ class BlockChain:
 
     #
     def createBlock(self, txnsFromPool, forgerWallet):
+
+        print('---> BlockChain.createBlock:')
 
         coveredTxns = self.getCoveredTxnSet(txnsFromPool)
 
@@ -123,6 +140,8 @@ class BlockChain:
     # (I don't think this will scale well as the blockchain grows.)
     def transactionExists(self, txn):
 
+        print('---> BlockChain.transactionExists:')
+
         for block in self.blocks:
 
             for blockTxn in block.txns:
@@ -136,6 +155,8 @@ class BlockChain:
     #
     def forgeValid(self, block):
 
+        print('---> BlockChain.forgeValid:')
+
         forgePubKey = self.pos.forger(block.prevHash)
         proposedBlockForger = block.forger
 
@@ -147,6 +168,8 @@ class BlockChain:
     #
     def txnValid(self, txns):
 
+        print('---> BlockChain.txnValid:')
+
         coveredTxns = self.getCoveredTxnSet(txns)
 
         if len(coveredTxns) == len(txns):
@@ -156,6 +179,8 @@ class BlockChain:
 
     #
     def toJson(self):
+
+        print('---> BlockChain.toJson:')
 
         # Block dictionary.
         data = {}

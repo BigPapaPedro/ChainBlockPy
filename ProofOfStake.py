@@ -13,6 +13,7 @@ class ProofOfStake:
     def setGenesisNodeStake(self):
 
         genesisPubKey = open('keys/genesisPublicKey.pem', 'r').read()
+        #genesisPubKey = open('keys/genesisPublicKey.der', 'r').read()
         self.stakers[genesisPubKey] = 1
 
     #

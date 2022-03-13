@@ -5,11 +5,11 @@ import requests
 
 if __name__ == '__main__':
 
-    bob = Wallet()
-    alice = Wallet()
     exchange = Wallet()
+    alice = Wallet()
+    bob = Wallet()
 
-    txn = exchange.createTransaction(bob.pubKeyString(), 1, 'EXCHANGE')
+    txn = exchange.createTransaction(exchange.pubKeyString(), 1000000, 'EXCHANGE')
     url = 'http://blockabees.sytes.net:8021/txn'
     pkg = {'txn': BlockchainUtils.encode(txn)}
     print('pkg:' + str(pkg))
@@ -23,7 +23,7 @@ if __name__ == '__main__':
     req = requests.post(url, json=pkg)
     print(req.text)
 
-    txn = exchange.createTransaction(exchange.pubKeyString(), 333, 'EXCHANGE')
+    txn = exchange.createTransaction(bob.pubKeyString(), 333, 'EXCHANGE')
     url = 'http://blockabees.sytes.net:8021/txn'
     pkg = {'txn': BlockchainUtils.encode(txn)}
     print('pkg:' + str(pkg))
