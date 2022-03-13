@@ -24,7 +24,7 @@
     <form id="sendForm">
         Sender Public Key <input type="text" id="sndrPubKey" placeholder="Sender Public Key"><br>
         Recipient Public Key <input type="text" id="rcvrPubKey" placeholder="Receiver Public Key"><br>
-        Amount <input type="text" id="txnAmount" placeholder="0"><br>
+        Amount <input type="text" id="amount" placeholder="0"><br>
         <select id="txnType">
             <option value="EXCHANGE">EXCHANGE</option>
             <option value="SEND">Send</option>
@@ -43,12 +43,10 @@
 
         //var sndrPubKey = $("#sndrPubKey").val();
         //var rcvrPubKey = $("#rcvrPubKey").val();
-        var txnAmount = $("#txnAmount").val();
+        var amount = $("#amount").val();
         var txnType = $("#txnType").val();
 
-        var dataJsonObj = {'id': '000790e2943511ec9553001a7dda7115', 'txnType': txnType, 'amount': txnAmount, 'timeStamp': 1645378366.3736532, 'sndrPubKey': '-----BEGIN PUBLIC KEY-----\\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAozFpaspiTuAkZWsHq/ap\\n0QTMtZo737hEH22KI4EWeSACJDSrjSdlwtDWz0OiqUrRj/SdJ0flX+PsFFYvpPlt\\nwC0LeBKWhV4NvwgRHzg4ya2qPvelyw4dqY8z6oMk+kanMu/rEVsh1n/1agQGRZMh\\nD4jyUrbD8fDmidjTzjnne926XFkMDst141yvdGuBNPSpdfMe4u1kBOAfQ6PdcnHG\\nJrLnPx7VhAGpZhblaWZa7jWPdjKqQG8cJdYDtZTD+YboQLo9CzI1BZLDd1XqMtUO\\nR1mxoo5VDr1vs2+B+DdgTTP8gmfiRgd8QAO8kNkx2rt+EHCbsWvCePcXXw6CrwbE\\nkwIDAQAB\\n-----END PUBLIC KEY-----', 'rcvrPubKey': '-----BEGIN PUBLIC KEY-----\\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAozFpaspiTuAkZWsHq/ap\\n0QTMtZo737hEH22KI4EWeSACJDSrjSdlwtDWz0OiqUrRj/SdJ0flX+PsFFYvpPlt\\nwC0LeBKWhV4NvwgRHzg4ya2qPvelyw4dqY8z6oMk+kanMu/rEVsh1n/1agQGRZMh\\nD4jyUrbD8fDmidjTzjnne926XFkMDst141yvdGuBNPSpdfMe4u1kBOAfQ6PdcnHG\\nJrLnPx7VhAGpZhblaWZa7jWPdjKqQG8cJdYDtZTD+YboQLo9CzI1BZLDd1XqMtUO\\nR1mxoo5VDr1vs2+B+DdgTTP8gmfiRgd8QAO8kNkx2rt+EHCbsWvCePcXXw6CrwbE\\nkwIDAQAB\\n-----END PUBLIC KEY-----'};
-
-        console.log(dataJsonObj);
+        var dataJsonObj = {'txn': '{"py/object": "Transaction.Transaction", "id": "000790e2943511ec9553001a7dda7115", "txnType": \"' + txnType + '\", "amount": ' + amount + ', "timeStamp": 1645378366.3736532, "sndrPubKey": "-----BEGIN PUBLIC KEY-----\\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAozFpaspiTuAkZWsHq/ap\\n0QTMtZo737hEH22KI4EWeSACJDSrjSdlwtDWz0OiqUrRj/SdJ0flX+PsFFYvpPlt\\nwC0LeBKWhV4NvwgRHzg4ya2qPvelyw4dqY8z6oMk+kanMu/rEVsh1n/1agQGRZMh\\nD4jyUrbD8fDmidjTzjnne926XFkMDst141yvdGuBNPSpdfMe4u1kBOAfQ6PdcnHG\\nJrLnPx7VhAGpZhblaWZa7jWPdjKqQG8cJdYDtZTD+YboQLo9CzI1BZLDd1XqMtUO\\nR1mxoo5VDr1vs2+B+DdgTTP8gmfiRgd8QAO8kNkx2rt+EHCbsWvCePcXXw6CrwbE\\nkwIDAQAB\\n-----END PUBLIC KEY-----", "rcvrPubKey": "-----BEGIN PUBLIC KEY-----\\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAozFpaspiTuAkZWsHq/ap\\n0QTMtZo737hEH22KI4EWeSACJDSrjSdlwtDWz0OiqUrRj/SdJ0flX+PsFFYvpPlt\\nwC0LeBKWhV4NvwgRHzg4ya2qPvelyw4dqY8z6oMk+kanMu/rEVsh1n/1agQGRZMh\\nD4jyUrbD8fDmidjTzjnne926XFkMDst141yvdGuBNPSpdfMe4u1kBOAfQ6PdcnHG\\nJrLnPx7VhAGpZhblaWZa7jWPdjKqQG8cJdYDtZTD+YboQLo9CzI1BZLDd1XqMtUO\\nR1mxoo5VDr1vs2+B+DdgTTP8gmfiRgd8QAO8kNkx2rt+EHCbsWvCePcXXw6CrwbE\\nkwIDAQAB\\n-----END PUBLIC KEY-----", "signature": "26eb4f081a0708a4c4b021929bb4f71e5dbe8621370c7e87233a803523fa6c763d9fc3fb5977757aee755cc0dba18e97b4841d07617ed49118dbc04ccf305972dd4d84983d34343b62384b48134837577b8c3e2999762536f9a45184340c9704ae2465f7b6c0db44ebbb8ab9bc5cc5e929f5ba95cad357101383a38bfd5db39cbe9efc5545dd297ad96d6a042ba5ed3a999a30d8c5b0410a9de0ca4c6932743597aa6c67db53a32dcf2ce37b4dc5a2a6f906846165173f8ae33a36f626fa4a58ffb246a23f95c3624bbac77b30246383b6f9287088799bc3784ca072668d13d2b6a73a4016c675a304d51cd05c0d68fe7fb6e062361a2900bbea956591c9460b"}'};
 
         var dataJsonStr = JSON.stringify(dataJsonObj);
 
@@ -57,12 +55,12 @@
 
         $.ajax({
             method: "POST",
-            url: "http://192.168.1.113:8021/newtxn",
+            url: "http://192.168.1.113:8021/txn",
             data: dataJsonStr,
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function( resp ){
-                    $('#response pre').html( 'Server Response: ' + resp );
+                    $('#response pre').html( resp );
                 },
                 error: function( jqXhr, textStatus, errorThrown ){
                     console.log( errorThrown );

@@ -43,6 +43,7 @@ class Wallet:
         # Get the bytes from the signature.
         signature = bytes.fromhex(signature)
         dataHash = BlockchainUtils.hash(data)
+        print("RSA.importKey(pubKeyString)", RSA.importKey(pubKeyString).public_key().export_key())
         pubKey = RSA.importKey(pubKeyString)
         signatureSchemeObj = PKCS1_v1_5.new(pubKey)
 

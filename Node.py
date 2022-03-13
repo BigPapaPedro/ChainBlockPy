@@ -53,7 +53,7 @@ class Node:
     #
     def handleTxn(self, txn):
 
-        print('!!!!! txn: ' + str(txn))
+        print('!!! handleTxn: ' + str(txn))
         data = txn.payload()
         signature = txn.signature
         signerPubKey = txn.sndrPubKey
@@ -61,7 +61,10 @@ class Node:
         txnExists = self.txnPool.txnExists(txn)
         txnInBlock = self.blockChain.transactionExists((txn))
 
+        print('!!! txnExists: ' + str(txnExists) + ', txnInBlock:' + str(txnInBlock) + ', signatureValid: ' + str(signatureValid))
+
         if not txnExists and not txnInBlock and signatureValid:
+            print('!!! handleTxn IF:')
             self.txnPool.addTxn(txn)
             msg = Message(self.p2p.socketConnector, 'TRANSACTION', txn)
             encodedMessage = BlockchainUtils.encode(msg)

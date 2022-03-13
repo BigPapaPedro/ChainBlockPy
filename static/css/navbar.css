@@ -23,9 +23,10 @@ li.navbar a.navbar {
 }
 
 li.navbar a:hover {
-  background-color: #111;
+  background-color: #996633;
 }
 
 .active {
-  background-color: #04AA6D;
+  background-color: #CC9900;
+  /* green 04AA6D */
 }

@@ -71,6 +71,42 @@ class NodeAPI(FlaskView):
         return jsonify(response), 201
 
     #
+    @route('newtxn', methods=['POST'])
+    def newtxn(self):
+
+        print("@route newtxn: " + str(request.data))
+
+        values = request.get_json()
+
+        print(values)
+
+        print("decode: txnType " + values['txnType'])
+        print("decode: signature " + values['amount'])
+        print("decode: sndrPubKey " + values['sndrPubKey'])
+
+        print('-----------------')
+
+        theTxn = "\"" + values['txnType'] + "\""
+
+        txn = exchange.createTransaction(values['sndrPubKey'], values['amount'], theTxn)
+
+        # Decode the received json string into an object.
+        txn = BlockchainUtils.decode(values['txn'])
+
+        print("decode: id " + txn.id)
+        print("decode: txnType " + txn.txnType)
+        print("decode: signature " + txn.signature)
+        print("decode: amount " + str(txn.amount))
+        print("decode: sndrPubKey " + txn.sndrPubKey)
+        print("decode: rcvrPubKey " + txn.rcvrPubKey)
+        print("decode: timeStamp " + str(txn.timeStamp))
+
+        node.handleNewTxn(txn)
+
+        response = {'msg': 'Received transaction'}
+        return jsonify(response), 201
+
+    #
     @route('txn', methods=['POST'])
     def txn(self):
 
@@ -85,9 +121,16 @@ class NodeAPI(FlaskView):
         # Decode the received json string into an object.
         txn = BlockchainUtils.decode(values['txn'])
 
-        print("decode: " + txn.signature)
+        print("decode: id " + txn.id)
+        print("decode: txnType " + txn.txnType)
+        print("decode: signature " + txn.signature)
+        print("decode: amount " + str(txn.amount))
+        print("decode: sndrPubKey " + txn.sndrPubKey)
+        print("decode: rcvrPubKey " + txn.rcvrPubKey)
+        print("decode: timeStamp " + str(txn.timeStamp))
 
         # Handle the transaction.
+        print("handleTxn")
         node.handleTxn(txn)
 
         response = {'msg': 'Received transaction'}
@@ -107,13 +150,13 @@ class NodeAPI(FlaskView):
         return render_template('blockchainexplorer.html')
 
     #
-    @route('transactionexplorer', methods=['GET'])
-    def txnsExplorer(self):
+    @route('pendingtransactions', methods=['GET'])
+    def pendingTxns(self):
 
-        return render_template('transactionexplorer.html')
+        return render_template('pendingtransactions.html')
 
     #
-    @route('nodeexplorer', methods=['GET'])
-    def nodeExplorer(self):
+    @route('networkexplorer', methods=['GET'])
+    def networkExplorer(self):
 
-        return render_template('nodeexplorer.html')
+        return render_template('networkexplorer.html')

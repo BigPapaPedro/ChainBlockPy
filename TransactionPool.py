@@ -16,6 +16,7 @@ class TransactionPool:
         for poolTxn in self.txns:
 
             if poolTxn.equals(txn):
+                print(txn + " already in the pool.")
                 return True
 
         return False

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>ChainBlockPy Transaction Explorer</title>
+    <title>BlockABees Transaction Explorer</title>
     <link rel="icon" href="/static/images/favicon.ico">
     <link rel="stylesheet" href="/static/css/default.css">
     <link rel="stylesheet" href="/static/css/navbar.css">
@@ -12,10 +12,9 @@
 
     <ul class="navbar">
       <li class="navbar"><a class="navbar" href="/">Home</a></li>
-      <li class="navbar"><a class="navbar" href="maketxn">Make Transaction</a></li>
       <li class="navbar"><a class="navbar" href="blockchainexplorer">Blockchain Explorer</a></li>
-      <li class="navbar"><a class="navbar active" href="transactionexplorer">Transaction Explorer</a></li>
-      <li class="navbar"><a class="navbar" href="nodeexplorer">Node Explorer</a></li>
+      <li class="navbar"><a class="navbar active" href="pendingtransactions">Pending Transactions</a></li>
+      <li class="navbar"><a class="navbar" href="networkexplorer">Network Explorer</a></li>
       <li class="navbar" style="float:right"><a class="navbar" class="active" href="#about">About</a></li>
     </ul>
 
@@ -24,13 +23,13 @@
     <table id='table'>
 
         <tr>
-            <th>Amount</th>
-            <th>ID</th>
-            <th>Receiver Public Key</th>
-            <th>Signature</th>
+            <th>Transaction<br>ID</th>
+            <th>Transaction<br>Type</th>
             <th>Sender Public Key</th>
-            <th>Timestamp</th>
-            <th>Transaction Type</th>
+            <th>Receiver Public Key</th>
+            <th>Amount</th>
+            <th>Signature</th>
+            <th>Time Stamp</th>
         </tr>
 
         <script>
@@ -42,24 +41,24 @@
             var out = '';
 
             // Iterate through each block.
-            $.each(data.blocks, function (key, value) {
+            $.each(data, function (key, value) {
 
                 out += '<tr>';
 
-                console.log(key);
+                out += '<td class=\"truncated\">' + value.id + '</td>';
+                out += '<td>' + value.txnType + '</td>';
+                out += '<td class=\"truncated\">' + value.sndrPubKey + '</td>';
+                out += '<td class=\"truncated\">' + value.rcvrPubKey + '</td>';
+                out += '<td>' + value.amount + '</td>';
+                out += '<td class=\"truncated\">' + value.signature + '</td>';
+                out += '<td>' + value.timeStamp + '</td>';
 
-                $.each(value, function (key2, value2) {
+                out += '</tr>';
 
-                    out += '<td>' + value2 + '</td>';
+                console.log(out);
 
-                });
-
-            out += '</tr>';
-
-            console.log(out);
-
-            //INSERTING ROWS INTO TABLE
-            $('#table').append(out);
+                //INSERTING ROWS INTO TABLE
+                $('#table').append(out);
 
             out = '';
 
